@@ -21,6 +21,9 @@ public class Usuario extends Cuenta implements Serializable {
     @Column(nullable = false, length = 20)
     private String telefono;
 
+    @Column(nullable = false)
+    private boolean estado;
+
     @Lob
     @Column(nullable = false)
     private String urlFoto;

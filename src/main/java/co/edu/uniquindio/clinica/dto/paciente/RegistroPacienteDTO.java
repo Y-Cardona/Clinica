@@ -1,6 +1,5 @@
 package co.edu.uniquindio.clinica.dto.paciente;
 
-import co.edu.uniquindio.clinica.modelo.enums.Alergia;
 import co.edu.uniquindio.clinica.modelo.enums.Ciudad;
 import co.edu.uniquindio.clinica.modelo.enums.Eps;
 import co.edu.uniquindio.clinica.modelo.enums.TipoSangre;

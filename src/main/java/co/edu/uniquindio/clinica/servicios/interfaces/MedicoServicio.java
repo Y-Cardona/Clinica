@@ -1,9 +1,8 @@
 package co.edu.uniquindio.clinica.servicios.interfaces;
 
 import co.edu.uniquindio.clinica.dto.ItemCitaDTO;
-import co.edu.uniquindio.clinica.clinica.dto.medico.*;
-import co.edu.uniquindio.clinica.dto.paciente.DetalleCita;
 import co.edu.uniquindio.clinica.dto.medico.*;
+import co.edu.uniquindio.clinica.dto.paciente.DetalleCita;
 import co.edu.uniquindio.clinica.modelo.entidades.Cita;
 
 import java.util.List;

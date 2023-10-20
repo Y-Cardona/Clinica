@@ -44,7 +44,7 @@ public class PacienteController {
         }
     }
 
-    @GetMapping("/listaMedicosDisponibles")
+    /*@GetMapping("/listaMedicosDisponibles")
     public ResponseEntity<MensajeDTO> medicosDisponibles(@Valid @RequestBody  MedicosDisponiblesDTO medicosDisponiblesDTO){
         System.out.println("pasa");
         try {
@@ -55,5 +55,5 @@ public class PacienteController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MensajeDTO(
                     true, e.getMessage()));
         }
-    }
+    }*/
 }

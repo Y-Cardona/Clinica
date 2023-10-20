@@ -202,7 +202,7 @@ public class PacienteServicioImpl implements PacienteServicio {
     }
 
     @Override
-    public void crearPQRS(RegistroPqrDTO registroPqrDTO) throws Exception{
+    public void crearPqr(RegistroPqrDTO registroPqrDTO) throws Exception{
 
         Pqr pqrNuevo = new Pqr();
         Mensaje mensajeNuevo = new Mensaje();

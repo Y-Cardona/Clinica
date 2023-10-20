@@ -1,16 +1,20 @@
 package co.edu.uniquindio.clinica.servicios.impl;
+
 import co.edu.uniquindio.clinica.dto.LoginDTO;
 import co.edu.uniquindio.clinica.dto.TokenDTO;
-import co.edu.uniquindio.clinica.servicios.interfaces.AutenticacionServicio;
-import co.edu.uniquindio.clinica.utils.JWTUtils;
 import co.edu.uniquindio.clinica.modelo.entidades.Cuenta;
 import co.edu.uniquindio.clinica.modelo.entidades.Medico;
 import co.edu.uniquindio.clinica.modelo.entidades.Paciente;
 import co.edu.uniquindio.clinica.repositorios.CuentaRepo;
+import co.edu.uniquindio.clinica.servicios.interfaces.AutenticacionServicio;
+import co.edu.uniquindio.clinica.utils.JWTUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +50,7 @@ public class AutenticacionServicioImpl implements AutenticacionServicio {
         Map<String, Object> map = new HashMap<>();
         map.put("rol", rol);
         map.put("nombre", nombre);
-        map.put("id", cuenta.getCedula());
+        map.put("id", cuenta.getCodigo());
 
         return jwtUtils.generarToken(cuenta.getCorreo(), map);
     }

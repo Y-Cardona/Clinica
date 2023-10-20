@@ -1,7 +1,6 @@
 package co.edu.uniquindio.clinica.servicios.interfaces;
 
 import co.edu.uniquindio.clinica.dto.NuevaPasswordDTO;
-import co.edu.uniquindio.clinica.clinica.dto.paciente.*;
 import co.edu.uniquindio.clinica.dto.paciente.*;
 
 import java.time.LocalDate;
@@ -23,7 +22,7 @@ public interface PacienteServicio {
 
     int agendarCita(RegistroCitaDTO registroCitaDTO) throws Exception; // Método para que un paciente agende una cita médica.
 
-    void crearPQRS(RegistroPQRSDTO registroPQRSDTO) throws Exception; // Método para que un paciente cree una PQRS (Peticiones, Quejas, Reclamos y Sugerencias).
+    void crearPqr(RegistroPqrDTO registroPQRSDTO) throws Exception; // Método para que un paciente cree una PQRS (Peticiones, Quejas, Reclamos y Sugerencias).
 
     void responderPQRS(int codigoPQRS) throws Exception; // Método para que un paciente responda a una PQRS.
 
@@ -37,5 +36,5 @@ public interface PacienteServicio {
 
     List<DetalleCita> verHistorialMedico(int codigoPaciente); // Método para ver el detalle de una cita médica.
 
-    List<MedicosDisponiblesGetDTO> mostrarMedicosDisponibles(MedicosDisponiblesDTO medicosDisponiblesDTO)throws Exception;
+    //List<MedicosDisponiblesDTO> mostrarMedicosDisponibles(MedicosDisponiblesDTO medicosDisponiblesDTO)throws Exception;
 }

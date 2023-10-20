@@ -46,6 +46,6 @@ public class Cita implements Serializable {
     private Atencion atencionAsignada;
 
     @OneToMany(mappedBy = "cita")
-    private List<Pqr> pqrsList;
+    private List<Pqr> pqrList;
 
 }

@@ -1,19 +1,18 @@
 package co.edu.uniquindio.clinica.servicios.impl;
 
 import co.edu.uniquindio.clinica.dto.ItemCitaDTO;
-import co.edu.uniquindio.clinica.clinica.dto.medico.*;
-import co.edu.uniquindio.clinica.dto.paciente.DetalleCita;
 import co.edu.uniquindio.clinica.dto.medico.*;
+import co.edu.uniquindio.clinica.dto.paciente.DetalleCita;
 import co.edu.uniquindio.clinica.excepciones.Excepciones;
 import co.edu.uniquindio.clinica.modelo.entidades.Atencion;
 import co.edu.uniquindio.clinica.modelo.entidades.Cita;
 import co.edu.uniquindio.clinica.modelo.entidades.DiaLibre;
 import co.edu.uniquindio.clinica.modelo.enums.EstadoCita;
-import co.edu.uniquindio.proyecto.repositorios.AtencionRepo;
-import co.edu.uniquindio.proyecto.repositorios.CitaRepo;
-import co.edu.uniquindio.proyecto.repositorios.DiaLibreRepo;
-import co.edu.uniquindio.proyecto.servicios.interfaces.MedicoServicio;
-import co.edu.uniquindio.proyecto.servicios.interfaces.PacienteServicio;
+import co.edu.uniquindio.clinica.repositorios.AtencionRepo;
+import co.edu.uniquindio.clinica.repositorios.CitaRepo;
+import co.edu.uniquindio.clinica.repositorios.DiaLibreRepo;
+import co.edu.uniquindio.clinica.servicios.interfaces.MedicoServicio;
+import co.edu.uniquindio.clinica.servicios.interfaces.PacienteServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -120,14 +119,14 @@ public class MedicoServicioImpl implements MedicoServicio {
             throw new Excepciones("Error, El código de cita "+finalizarCitaDTO.codigoCita()+ " No existe");
         }
 
-        if(citaBuscada.get().getEstadoCita()==EstadoCita.ASIGNADA){
+        if(citaBuscada.get().getEstadoCita()==EstadoCita.PROGRAMADA){
             Cita cita = citaBuscada.get();
             Atencion atencion = new Atencion();
             atencion.setCita(cita);
             atencion.setDiagnostico(finalizarCitaDTO.diagnostico());
             atencion.setNotasMedicas(finalizarCitaDTO.notas_medicas());
             atencion.setTratamiento(finalizarCitaDTO.tratamiento());
-            cita.setEstadoCita(EstadoCita.FINALIZADA);
+            cita.setEstadoCita(EstadoCita.COMPLETADA);
 
             atencionRepo.save(atencion);
             citaRepo.save(cita);

@@ -2,9 +2,9 @@ package co.edu.uniquindio.clinica.dto;
 
 import java.time.LocalDateTime;
 
-public record PQRSDTOAdmin(
+public record PqrDTOAdmin(
         int codigo,
-        int estadoPQRS,
+        int estadoPqr,
         String nombrePaciente,
         LocalDateTime fecha
 ){

@@ -3,15 +3,15 @@ package co.edu.uniquindio.clinica.servicios.impl;
 import co.edu.uniquindio.clinica.dto.*;
 import co.edu.uniquindio.clinica.dto.admin.DetalleMedicoDTO;
 import co.edu.uniquindio.clinica.dto.admin.HistorialConsultas;
-import co.edu.uniquindio.proyecto.dto.admin.ItemMedicoDTO;
-import co.edu.uniquindio.proyecto.dto.admin.RespuestaDTO;
-import co.edu.uniquindio.proyecto.excepciones.Excepciones;
-import co.edu.uniquindio.proyecto.modelo.entidades.*;
-import co.edu.uniquindio.proyecto.modelo.enums.EstadoPQRS;
-import co.edu.uniquindio.proyecto.repositorios.*;
-import co.edu.uniquindio.proyecto.servicios.interfaces.AdministradorServicio;
+import co.edu.uniquindio.clinica.dto.admin.ItemMedicoDTO;
+import co.edu.uniquindio.clinica.dto.admin.RespuestaDTO;
+import co.edu.uniquindio.clinica.excepciones.Excepciones;
+import co.edu.uniquindio.clinica.modelo.entidades.*;
+import co.edu.uniquindio.clinica.modelo.enums.EstadoPqr;
+import co.edu.uniquindio.clinica.repositorios.*;
+import co.edu.uniquindio.clinica.servicios.interfaces.AdministradorServicio;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -29,7 +29,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     private final MensajeRepo mensajeRepo;
     private final HorarioRepo horarioRepo;
 
-    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    //BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
     public int crearMedico(MedicoDTO medicoDTO) throws Exception {
@@ -50,9 +50,10 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         medico.setNombre(medicoDTO.nombre());
         medico.setEspecialidad(medicoDTO.especialidad());
         medico.setCiudad(medicoDTO.ciudad());
-        String passwordEncriptada = passwordEncoder.encode( medicoDTO.password() );
+        //String passwordEncriptada = passwordEncoder.encode( medicoDTO.password() );
+        String passwordEncriptada = medicoDTO.password();
         medico.setPassword(passwordEncriptada);
-        medico.setFoto(medicoDTO.urlFoto());
+        medico.setUrlFoto(medicoDTO.urlFoto());
         medico.setCorreo(medicoDTO.correo());
         medico.setEstado(true);
 
@@ -87,7 +88,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
                 obtenido.getEspecialidad(),
                 obtenido.getTelefono(),
                 obtenido.getCorreo(),
-                obtenido.getFoto()
+                obtenido.getUrlFoto()
         );
 
         return detalleMedicoDTO;
@@ -113,7 +114,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         medico.setEspecialidad( detalleMedicoDTO.especialidad() );
         medico.setCiudad(detalleMedicoDTO.ciudad());
         medico.setCorreo(detalleMedicoDTO.correo() );
-        medico.setFoto(detalleMedicoDTO.urlFoto());
+        medico.setUrlFoto(detalleMedicoDTO.urlFoto());
 
         Medico medicoNuevo = medicoRepo.save(medico);
 
@@ -154,7 +155,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
                 respuesta.add(new ItemMedicoDTO(
                         medico.getCedula(),
                         medico.getNombre(),
-                        medico.getFoto(),
+                        medico.getUrlFoto(),
                         medico.getEspecialidad(),
                         medico.getHorario().getHoraInicio(),
                         medico.getHorario().getHoraFin()));
@@ -164,15 +165,15 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     }
 
     @Override
-    public List<ItemPQRSDTO> listarPQRS() throws Exception {
+    public List<ItemPqrDTO> listarPQRS() throws Exception {
 
-        List<Pqrs> listaPqrs = pqrsRepo.findAll(); //select * from pqrs
-        List<ItemPQRSDTO> respuesta = new ArrayList<>();
+        List<Pqr> listaPqrs = pqrsRepo.findAll(); //select * from pqrs
+        List<ItemPqrDTO> respuesta = new ArrayList<>();
 
-        for (Pqrs p : listaPqrs){
-            respuesta.add( new ItemPQRSDTO(
+        for (Pqr p : listaPqrs){
+            respuesta.add( new ItemPqrDTO(
                     p.getCodigo(),
-                    p.getEstado(),
+                    p.getEstadoPqr(),
                     p.getMotivo(),
                     p.getFechaCreacion(),
                     p.getCita().getPaciente().getNombre()
@@ -183,19 +184,19 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     }
 
     @Override
-    public DetallePQRSDTO verDetallePQRS(int codigo) throws Exception {
-        Optional<Pqrs> opcional = pqrsRepo.findById(codigo);
+    public DetallePqrDTO verDetallePQRS(int codigo) throws Exception {
+        Optional<Pqr> opcional = pqrsRepo.findById(codigo);
 
         if(opcional.isEmpty()){
             throw new Exception("El código" +codigo+" no está asociado a ningún PQRS");
         }
 
-        Pqrs pqrs = opcional.get();
+        Pqr pqrs = opcional.get();
 
         return new
-                DetallePQRSDTO(
+                DetallePqrDTO(
                 pqrs.getCodigo(),
-                pqrs.getEstado(),
+                pqrs.getEstadoPqr(),
                 pqrs.getMotivo(),
                 pqrs.getCita().getPaciente().getNombre(),
                 pqrs.getCita().getMedico().getNombre(),
@@ -210,16 +211,16 @@ public class AdministradorServicioImpl implements AdministradorServicio {
 
         Mensaje mensajeNuevo = new Mensaje();
         Mensaje mensajeAnterior = mensajeRepo.getById(respuestaDTO.codigoMensaje());
-        mensajeNuevo.setFecha(LocalDate.now());
+        mensajeNuevo.setFechaCreacion(LocalDate.now());
         mensajeNuevo.setContenido(respuestaDTO.mensaje());
         mensajeNuevo.setMensaje(mensajeAnterior);
-        mensajeNuevo.setPqrs(mensajeAnterior.getPqrs());
+        mensajeNuevo.setPqr(mensajeAnterior.getPqr());
 
         mensajeRepo.save(mensajeNuevo);
     }
 
     @Override
-    public PQRSDTOAdmin verDetallePQRS() throws Exception {
+    public PqrDTOAdmin verDetallePQRS() throws Exception {
         return null;
     }
 
@@ -244,15 +245,15 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     }
 
     @Override
-    public void cambiarEstadoPQRS(int codigoPQRS, EstadoPQRS estadoPQRS)throws Exception{
+    public void cambiarEstadoPQRS(int codigoPQRS, EstadoPqr estadoPqr)throws Exception{
 
-        Optional <Pqrs> opcional = pqrsRepo.findById(codigoPQRS);
+        Optional <Pqr> opcional = pqrsRepo.findById(codigoPQRS);
 
         if(opcional.isEmpty()){
             throw new Exception("El código" +codigoPQRS+" no está asociado a ningún PQRS");
         }
-        Pqrs pqrs = opcional.get();
-        pqrs.setEstado(estadoPQRS);
+        Pqr pqrs = opcional.get();
+        pqrs.setEstadoPqr(estadoPqr);
         pqrsRepo.save(pqrs);
 
     }

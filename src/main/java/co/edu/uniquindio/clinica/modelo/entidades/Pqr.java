@@ -3,6 +3,7 @@ import co.edu.uniquindio.clinica.modelo.enums.EstadoPqr;
 import jakarta.persistence.*;
 import lombok.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,18 +21,18 @@ public class Pqr implements Serializable {
     private int codigo;
 
     @Column(nullable = false)
-    private LocalDateTime fechaCreacion;
+    private LocalDate fechaCreacion;
 
     @Column(nullable = false)
     private String motivo;
 
 
     @Column(nullable = false, updatable = true)
-    private EstadoPqr estadoPQRS;
+    private EstadoPqr estadoPqr;
 
     @ManyToOne
     private Cita cita;
 
-    @OneToMany(mappedBy = "pqrs")
+    @OneToMany(mappedBy = "pqr")
     private List<Mensaje> mensajes;
 }

@@ -7,7 +7,7 @@ import co.edu.uniquindio.clinica.modelo.enums.EstadoPqr;
 import java.time.LocalDate;
 import java.util.List;
 
-public record DetallePQRSDTO(
+public record DetallePqrDTO(
         int codigo,
         EstadoPqr estado,
         String motivo,

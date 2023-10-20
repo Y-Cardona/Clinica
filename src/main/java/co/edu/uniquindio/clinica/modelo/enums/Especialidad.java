@@ -10,7 +10,13 @@ public enum Especialidad {
     ORTOPEDIA("Ortopedia"),
     ANESTESIOLOGIA("Anestesiología"),
     PSIQUIATRIA("Psiquiatría"),
-    OFTALMOLOGIA("Oftamología");
+    OFTALMOLOGIA("Oftamología"),
+    DERMATOLOGIA("DERMATOLOGÍA"),
+    GINECOLOGIA("GINECOLOGÍA"),
+    PEDIATRIA("PEDIATRÍA"),
+    UROLOGIA("UROLOGÍA"),
+    ONCOLOGIA("ONCOLOGÍA"),
+    ENDOCRINOLOGIA("eDOCRINOLOGÍA");
 
     private String nombre;
 

@@ -13,7 +13,7 @@ import java.io.Serializable;
 public class Usuario extends Cuenta implements Serializable {
 
     @Column(nullable = false, length = 10, unique = true)
-    private String cedula;
+    private int cedula;
 
     @Column(nullable = false, length = 200)
     private String nombre;

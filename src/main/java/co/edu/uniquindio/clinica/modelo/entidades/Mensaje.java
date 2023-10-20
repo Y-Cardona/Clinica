@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,13 +21,16 @@ public class Mensaje implements Serializable {
     private int codigo;
 
     @Column(nullable = false)
-    private LocalDateTime fechaCreacion;
+    private LocalDate fechaCreacion;
 
-    @Column(nullable = false, length = 100)
-    private String mensaje;
+    @Column(nullable = false)
+    private String contenido;
+
+    @OneToOne
+    private Mensaje mensaje;
 
     @ManyToOne
-    private Pqr pqrs;
+    private Pqr pqr;
 
     @ManyToOne
     private Cuenta cuenta;

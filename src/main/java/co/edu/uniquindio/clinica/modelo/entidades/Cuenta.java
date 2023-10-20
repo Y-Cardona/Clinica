@@ -19,7 +19,7 @@ public class Cuenta implements Serializable {
     private int codigo;
 
     @Column(nullable = false, unique = true, length = 80)
-    private String email;
+    private String correo;
 
     @Column(nullable = false)
     private String password;

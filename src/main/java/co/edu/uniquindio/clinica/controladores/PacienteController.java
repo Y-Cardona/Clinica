@@ -2,7 +2,6 @@ package co.edu.uniquindio.clinica.controladores;
 
 import co.edu.uniquindio.clinica.dto.MensajeDTO;
 import co.edu.uniquindio.clinica.dto.paciente.MedicosDisponiblesDTO;
-import co.edu.uniquindio.clinica.dto.paciente.MedicosDisponiblesGetDTO;
 import co.edu.uniquindio.clinica.dto.paciente.RegistroCitaDTO;
 import co.edu.uniquindio.clinica.dto.paciente.RegistroPacienteDTO;
 import co.edu.uniquindio.clinica.servicios.interfaces.PacienteServicio;
@@ -49,7 +48,7 @@ public class PacienteController {
     public ResponseEntity<MensajeDTO> medicosDisponibles(@Valid @RequestBody  MedicosDisponiblesDTO medicosDisponiblesDTO){
         System.out.println("pasa");
         try {
-            List<MedicosDisponiblesGetDTO> medicoPostDTOList=pacienteServicio.mostrarMedicosDisponibles(medicosDisponiblesDTO);
+            List<MedicosDisponiblesDTO> medicoPostDTOList=pacienteServicio.mostrarMedicosDisponibles(medicosDisponiblesDTO);
             return ResponseEntity.status(HttpStatus.OK).body(new MensajeDTO(
                     false, medicoPostDTOList ));
         } catch (Exception e) {

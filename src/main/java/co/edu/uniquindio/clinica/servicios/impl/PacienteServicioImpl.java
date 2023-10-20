@@ -2,17 +2,17 @@ package co.edu.uniquindio.clinica.servicios.impl;
 
 import co.edu.uniquindio.clinica.dto.EmailDTO;
 import co.edu.uniquindio.clinica.dto.NuevaPasswordDTO;
-import co.edu.uniquindio.proyecto.dto.paciente.*;
-import co.edu.uniquindio.proyecto.excepciones.Excepciones;
-import co.edu.uniquindio.proyecto.modelo.entidades.*;
-import co.edu.uniquindio.proyecto.modelo.enums.EstadoCita;
-import co.edu.uniquindio.proyecto.modelo.enums.EstadoPQRS;
-import co.edu.uniquindio.proyecto.repositorios.*;
-import co.edu.uniquindio.proyecto.servicios.interfaces.EmailServicio;
-import co.edu.uniquindio.proyecto.servicios.interfaces.PacienteServicio;
+import co.edu.uniquindio.clinica.dto.paciente.*;
+import co.edu.uniquindio.clinica.excepciones.Excepciones;
+import co.edu.uniquindio.clinica.modelo.entidades.*;
+import co.edu.uniquindio.clinica.modelo.enums.EstadoCita;
+import co.edu.uniquindio.clinica.modelo.enums.EstadoPqr;
+import co.edu.uniquindio.clinica.repositorios.*;
+import co.edu.uniquindio.clinica.servicios.interfaces.EmailServicio;
+import co.edu.uniquindio.clinica.servicios.interfaces.PacienteServicio;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -37,7 +37,7 @@ public class PacienteServicioImpl implements PacienteServicio {
     private final CuentaRepo cuentaRepo;
     private final EmailServicio emailServicio;
 
-    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    //BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
     public int registrarse(RegistroPacienteDTO registroPacienteDTO) throws Exception{
@@ -52,7 +52,8 @@ public class PacienteServicioImpl implements PacienteServicio {
         Paciente paciente = new Paciente();
 //Datos de la Cuenta
         paciente.setCorreo( registroPacienteDTO.correo() );
-        String passwordEncriptada = passwordEncoder.encode( registroPacienteDTO.password() );
+        //String passwordEncriptada = passwordEncoder.encode( registroPacienteDTO.password() );
+        String passwordEncriptada = registroPacienteDTO.password();
         paciente.setPassword(passwordEncriptada);
         paciente.setEstado(true);
 //Datos del Usuario
@@ -60,7 +61,7 @@ public class PacienteServicioImpl implements PacienteServicio {
         paciente.setCedula( registroPacienteDTO.cedula() );
         paciente.setTelefono( registroPacienteDTO.telefono() );
         paciente.setCiudad( registroPacienteDTO.ciudad() );
-        paciente.setFoto( registroPacienteDTO.urlFoto() );
+        paciente.setUrlFoto( registroPacienteDTO.urlFoto() );
 //Datos del Paciente
         paciente.setFechaNacimiento( registroPacienteDTO.fechaNacimiento() );
         paciente.setEps( registroPacienteDTO.eps() );
@@ -89,7 +90,7 @@ public class PacienteServicioImpl implements PacienteServicio {
         paciente.setCedula( pacienteDTO.cedula() );
         paciente.setTelefono( pacienteDTO.telefono() );
         paciente.setCiudad( pacienteDTO.ciudad() );
-        paciente.setFoto( pacienteDTO.urlFoto() );
+        paciente.setUrlFoto( pacienteDTO.urlFoto() );
 //Datos del Paciente
         paciente.setFechaNacimiento( pacienteDTO.fechaNacimiento() );
         paciente.setEps( pacienteDTO.eps() );
@@ -119,7 +120,7 @@ public class PacienteServicioImpl implements PacienteServicio {
         Paciente paciente = pacienteBuscado.get();
 //Hacemos un mapeo de un objeto de tipo Paciente a un objeto de tipo DetallePacienteDTO
         return new DetallePacienteDTO( paciente.getCedula(),
-                paciente.getNombre(), paciente.getTelefono(), paciente.getFoto(), paciente.getCiudad(),
+                paciente.getNombre(), paciente.getTelefono(), paciente.getUrlFoto(), paciente.getCiudad(),
                 paciente.getFechaNacimiento(), paciente.getAlergias(), paciente.getEps(),
                 paciente.getTipoSangre(), paciente.getCorreo() );
     }
@@ -135,7 +136,8 @@ public class PacienteServicioImpl implements PacienteServicio {
 
         LocalTime fecha = LocalTime.now();
 
-        String parametro = Base64.getEncoder().encodeToString((optionalCuenta.get().getCedula()+": "+fecha).getBytes());
+        //PENDIENTE
+        String parametro = Base64.getEncoder().encodeToString((optionalCuenta.get().getCorreo()+": "+fecha).getBytes());
 
         emailServicio.enviarCorreo( new EmailDTO(
                 optionalCuenta.get().getCorreo(),
@@ -152,7 +154,8 @@ public class PacienteServicioImpl implements PacienteServicio {
             if(pacienteBuscado.isEmpty()){
                 throw new Excepciones("El paciente no fue encontrado");
             }
-        String passwordEncriptada = passwordEncoder.encode( nuevaPasswordDTO.password() );
+        //String passwordEncriptada = passwordEncoder.encode( nuevaPasswordDTO.password() );
+        String passwordEncriptada = nuevaPasswordDTO.password();
         Paciente paciente = pacienteBuscado.get();
         paciente.setPassword(passwordEncriptada);
 
@@ -191,7 +194,7 @@ public class PacienteServicioImpl implements PacienteServicio {
         cita.setMedico(medico);
         cita.setFechaCreacion(LocalDateTime.now());
         cita.setMotivo(registroCitaDTO.motivo());
-        cita.setEstadoCita(EstadoCita.ASIGNADA);
+        cita.setEstadoCita(EstadoCita.PROGRAMADA);
         cita.setFechaCita(registroCitaDTO.fechaCita());
         citaRepo.save(cita);
 
@@ -199,33 +202,33 @@ public class PacienteServicioImpl implements PacienteServicio {
     }
 
     @Override
-    public void crearPQRS(RegistroPQRSDTO registroPQRSDTO) throws Exception{
+    public void crearPQRS(RegistroPqrDTO registroPqrDTO) throws Exception{
 
-        Pqrs pqrsNuevo = new Pqrs();
+        Pqr pqrNuevo = new Pqr();
         Mensaje mensajeNuevo = new Mensaje();
 
-        Optional<Cita> citaBuscada = citaRepo.findById(registroPQRSDTO.CodigoCita());
+        Optional<Cita> citaBuscada = citaRepo.findById(registroPqrDTO.CodigoCita());
 
         if( citaBuscada.isEmpty() ){
             throw new Excepciones("No existe una cita con el código ");
         }
 
-        List<Pqrs> pqrsPacienteList= pqrsRepo.findByCodigoPaciente(registroPQRSDTO.codigoPaciente());
+        List<Pqr> pqrsPacienteList= pqrsRepo.findByCodigoPaciente(registroPqrDTO.codigoPaciente());
         if(pqrsPacienteList.size()==3){
             throw new Excepciones("Usted ya tiene 3 PQRS en el sistema, no es posible crear otro");
         }
 
         Cita cita = citaBuscada.get();
-        pqrsNuevo.setFechaCreacion(LocalDate.now());
-        pqrsNuevo.setEstado(EstadoPQRS.EN_PROCESO);
-        pqrsNuevo.setMotivo(registroPQRSDTO.movito());
-        pqrsNuevo.setCita(cita);
+        pqrNuevo.setFechaCreacion(LocalDate.now());
+        pqrNuevo.setEstadoPqr(EstadoPqr.EN_PROCESO);
+        pqrNuevo.setMotivo(registroPqrDTO.movito());
+        pqrNuevo.setCita(cita);
 
-        pqrsRepo.save(pqrsNuevo);
+        pqrsRepo.save(pqrNuevo);
 
-        mensajeNuevo.setPqrs(pqrsNuevo);
-        mensajeNuevo.setContenido(registroPQRSDTO.Detalle());
-        mensajeNuevo.setFecha(LocalDate.now());
+        mensajeNuevo.setPqr(pqrNuevo);
+        mensajeNuevo.setContenido(registroPqrDTO.Detalle());
+        mensajeNuevo.setFechaCreacion(LocalDate.now());
         mensajeRepo.save(mensajeNuevo);
 
     }
@@ -374,8 +377,8 @@ public class PacienteServicioImpl implements PacienteServicio {
         return detalleCitas;
     }
 
-    @Override
-    public List<MedicosDisponiblesGetDTO> mostrarMedicosDisponibles(MedicosDisponiblesDTO medicosDisponiblesDTO) throws Exception{
+   /* @Override
+    public List<MedicosDisponiblesDTO> mostrarMedicosDisponibles(MedicosDisponiblesDTO medicosDisponiblesDTO) throws Exception{
 
         List<Medico> medicos = medicoRepo.findMedicosByEspecialidadAndHorario(
                 medicosDisponiblesDTO.especialidad(),
@@ -387,13 +390,13 @@ public class PacienteServicioImpl implements PacienteServicio {
 
         List<Cita> citas = citaRepo.findAll();
 
-        List<MedicosDisponiblesGetDTO> medicosDisponiblesGetDTOS = new ArrayList<>();
+        List<MedicosDisponiblesDTO> medicosDisponiblesGetDTOS = new ArrayList<>();
 
         for (Medico medico: medicos) {
 
             LocalTime horaInicio = medico.getHorario().getHoraInicio();
             while (horaInicio.isBefore(medico.getHorario().getHoraFin())){
-                medicosDisponiblesGetDTOS.add( new MedicosDisponiblesGetDTO(medico.getNombre(), horaInicio));
+                medicosDisponiblesGetDTOS.add( new MedicosDisponiblesDTO(medico.getNombre(), horaInicio));
                 horaInicio = horaInicio.plusMinutes(30);
             }
         }
@@ -410,7 +413,7 @@ public class PacienteServicioImpl implements PacienteServicio {
     }
 
         return medicosDisponiblesGetDTOS;
-    }
+    }*/
 
     public boolean estaRepetidaCedula(int id) {
         return pacienteRepo.existsById(id);

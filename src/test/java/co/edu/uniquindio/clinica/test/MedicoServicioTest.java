@@ -1,11 +1,11 @@
 package co.edu.uniquindio.clinica.test;
 
-import co.edu.uniquindio.proyecto.dto.ItemCitaDTO;
-import co.edu.uniquindio.proyecto.dto.medico.*;
-import co.edu.uniquindio.proyecto.dto.paciente.DetalleCita;
-import co.edu.uniquindio.proyecto.modelo.entidades.Atencion;
-import co.edu.uniquindio.proyecto.servicios.interfaces.MedicoServicio;
-import co.edu.uniquindio.proyecto.servicios.interfaces.PacienteServicio;
+import co.edu.uniquindio.clinica.dto.ItemCitaDTO;
+import co.edu.uniquindio.clinica.dto.medico.*;
+import co.edu.uniquindio.clinica.dto.paciente.DetalleCita;
+import co.edu.uniquindio.clinica.modelo.entidades.Atencion;
+import co.edu.uniquindio.clinica.servicios.interfaces.MedicoServicio;
+import co.edu.uniquindio.clinica.servicios.interfaces.PacienteServicio;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

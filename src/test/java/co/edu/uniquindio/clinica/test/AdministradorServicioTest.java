@@ -1,16 +1,16 @@
 package co.edu.uniquindio.clinica.test;
 
-import co.edu.uniquindio.proyecto.dto.DetallePQRSDTO;
-import co.edu.uniquindio.proyecto.dto.ItemPQRSDTO;
-import co.edu.uniquindio.proyecto.dto.MedicoDTO;
-import co.edu.uniquindio.proyecto.dto.admin.DetalleMedicoDTO;
-import co.edu.uniquindio.proyecto.dto.admin.HistorialConsultas;
-import co.edu.uniquindio.proyecto.dto.admin.ItemMedicoDTO;
-import co.edu.uniquindio.proyecto.dto.admin.RespuestaDTO;
-import co.edu.uniquindio.proyecto.modelo.enums.Ciudad;
-import co.edu.uniquindio.proyecto.modelo.enums.Especialidad;
-import co.edu.uniquindio.proyecto.modelo.enums.EstadoPQRS;
-import co.edu.uniquindio.proyecto.servicios.interfaces.AdministradorServicio;
+import co.edu.uniquindio.clinica.dto.DetallePqrDTO;
+import co.edu.uniquindio.clinica.dto.ItemPqrDTO;
+import co.edu.uniquindio.clinica.dto.MedicoDTO;
+import co.edu.uniquindio.clinica.dto.admin.DetalleMedicoDTO;
+import co.edu.uniquindio.clinica.dto.admin.HistorialConsultas;
+import co.edu.uniquindio.clinica.dto.admin.ItemMedicoDTO;
+import co.edu.uniquindio.clinica.dto.admin.RespuestaDTO;
+import co.edu.uniquindio.clinica.modelo.enums.Ciudad;
+import co.edu.uniquindio.clinica.modelo.enums.Especialidad;
+import co.edu.uniquindio.clinica.modelo.enums.EstadoPqr;
+import co.edu.uniquindio.clinica.servicios.interfaces.AdministradorServicio;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class AdministradorServicioTest {
         MedicoDTO medicoDTO = new MedicoDTO(
                 "Gabriela Nuñez Díaz",
                 1094966343,
-                Ciudad.BOGOTÁ,
+                Ciudad.BOGOTA,
                 Especialidad.CARDIOLOGIA,
                 "3117567564",
                 "ganudi@gmail.com",
@@ -99,7 +99,7 @@ public class AdministradorServicioTest {
     @Test
     @Sql("classpath:dataset.sql" )
     public void ListarPqrsTest() throws Exception{
-        List<ItemPQRSDTO> listaPqrs = administradorServicio.listarPQRS();
+        List<ItemPqrDTO> listaPqrs = administradorServicio.listarPQRS();
         listaPqrs.forEach(System.out::println);
         Assertions.assertEquals(4, listaPqrs.size());
     }
@@ -107,7 +107,7 @@ public class AdministradorServicioTest {
     @Test
     @Sql("classpath:dataset.sql" )
     public void verDetallePqrs()throws Exception{
-        DetallePQRSDTO detallePQRSDTO = administradorServicio.verDetallePQRS(2);
+        DetallePqrDTO detallePQRSDTO = administradorServicio.verDetallePQRS(2);
         System.out.println(detallePQRSDTO.toString());
     }
 
@@ -124,7 +124,7 @@ public class AdministradorServicioTest {
     @Test
     @Sql("classpath:dataset.sql" )
     public void finalizarPqrs() throws Exception{
-        administradorServicio.cambiarEstadoPQRS(2, EstadoPQRS.CERRADA);
+        administradorServicio.cambiarEstadoPQRS(2, EstadoPqr.RESUELTO);
     }
 
     @Test

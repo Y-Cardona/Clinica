@@ -1,12 +1,11 @@
 package co.edu.uniquindio.clinica.servicios.interfaces;
 
 import co.edu.uniquindio.clinica.dto.*;
-import co.edu.uniquindio.proyecto.dto.admin.DetalleMedicoDTO;
-import co.edu.uniquindio.proyecto.dto.admin.HistorialConsultas;
-import co.edu.uniquindio.proyecto.dto.admin.ItemMedicoDTO;
-import co.edu.uniquindio.proyecto.dto.admin.RespuestaDTO;
-import co.edu.uniquindio.proyecto.modelo.entidades.Pqrs;
-import co.edu.uniquindio.proyecto.modelo.enums.EstadoPQRS;
+import co.edu.uniquindio.clinica.dto.admin.DetalleMedicoDTO;
+import co.edu.uniquindio.clinica.dto.admin.HistorialConsultas;
+import co.edu.uniquindio.clinica.dto.admin.ItemMedicoDTO;
+import co.edu.uniquindio.clinica.dto.admin.RespuestaDTO;
+import co.edu.uniquindio.clinica.modelo.enums.EstadoPqr;
 
 import java.util.List;
 
@@ -22,17 +21,17 @@ public interface AdministradorServicio {
 
     DetalleMedicoDTO obtenerMedico(int codigo)throws Exception;
 
-    List<ItemPQRSDTO> listarPQRS()throws Exception;
+    List<ItemPqrDTO> listarPQRS()throws Exception;
 
-    DetallePQRSDTO verDetallePQRS (int codigo) throws Exception;
+    DetallePqrDTO verDetallePQRS (int codigo) throws Exception;
 
     void responderPQRS(RespuestaDTO respuestaDTO)throws Exception;
 
-    PQRSDTOAdmin verDetallePQRS()throws Exception;
+    PqrDTOAdmin verDetallePQRS()throws Exception;
 
     List<ItemCitaAdminDTO> listarCitas()throws Exception;
 
-    void cambiarEstadoPQRS(int codigoPQRS, EstadoPQRS estadoPQRS)throws Exception;
+    void cambiarEstadoPQRS(int codigoPQRS, EstadoPqr estadoPQRS)throws Exception;
 
     boolean estaRepetidaCedula(int id);
 

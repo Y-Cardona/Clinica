@@ -5,7 +5,7 @@ plugins {
 }
 group 'co.edu.uniquindio'
 version '1.0-SNAPSHOT'
-description 'Breve descripción del proyecto'
+description 'Breve descripción del clinica'
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -22,6 +22,18 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'com.cloudinary:cloudinary-http44:1.33.0'
+
+    implementation 'org.springframework.security:spring-security-crypto:6.1.4'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    // Swaggerse utiliza para documentar y probar APIs
+    //RESTful.
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4'
+
 }
 test {
     useJUnitPlatform()

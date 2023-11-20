@@ -25,7 +25,7 @@ public class PacienteController {
     @PutMapping
     public ResponseEntity<MensajeDTO<String>> editarPerfil(@Valid @RequestBody DetallePacienteDTO detallePacienteDTO) throws Exception {
         pacienteServicio.editarPerfil(detallePacienteDTO);
-        return ResponseEntity.ok().body( new MensajeDTO<>(false, "Paciente editado correctamente") );
+        return ResponseEntity.ok().body( new MensajeDTO<>(false, "Su cuenta se ha eliminado correctamente, por lo tanto su sesión ya no está activa")
 
     }
 

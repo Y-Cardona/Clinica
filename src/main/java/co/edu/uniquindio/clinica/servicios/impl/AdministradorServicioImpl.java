@@ -15,6 +15,7 @@ import co.edu.uniquindio.clinica.modelo.entidades.*;
 import co.edu.uniquindio.clinica.modelo.enums.EstadoPQRS;
 import co.edu.uniquindio.clinica.repositorios.*;
 import co.edu.uniquindio.clinica.servicios.interfaces.AdministradorServicio;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -40,8 +41,32 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     @Override
     public int crearMedico(MedicoDTO medicoDTO) throws Exception {
 
-        if (estaRepetidaCedula(medicoDTO.cedula())) {
-            throw new Excepciones("La cédula ya se encuentra registrada");
+        if (estaRepetidaCedula_2(medicoDTO.cedula())) {
+            Medico medicoBuscado = medicoRepo.findByCedula(medicoDTO.cedula()).get();
+            if(!medicoBuscado.isEstado()) {
+                medicoBuscado.setEstado(true);
+                medicoBuscado.setCodigo(medicoBuscado.getCodigo());
+                medicoBuscado.setCedula(medicoBuscado.getCedula());
+
+                Optional<Horario> horarioBuscado = horarioRepo.findByMedicoId(medicoBuscado.getCodigo());
+                if (horarioBuscado.isEmpty()) {
+                    Horario horario = new Horario();
+                    horario.setMedico(medicoBuscado);
+                    horario.setHoraInicio(medicoDTO.horaInicioJornada());
+                    horario.setHoraFin(medicoDTO.horaFinJornada());
+                    horarioRepo.save(horario);
+                } else {
+                    horarioBuscado.get().setMedico(medicoBuscado);
+                    horarioBuscado.get().setHoraInicio(medicoDTO.horaInicioJornada());
+                    horarioBuscado.get().setHoraFin(medicoDTO.horaFinJornada());
+                    horarioRepo.save(horarioBuscado.get());
+                }
+
+                medicoRepo.save(medicoBuscado);
+                return medicoBuscado.getCodigo();
+
+            }
+            throw new Excepciones("La cédula ya se encuentra registrado");
         }
 
         if (estaRepetidoCorreo(medicoDTO.correo())) {
@@ -100,8 +125,8 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         medico.setCiudad(detalleMedicoDTO.ciudad());
         medico.setCorreo(detalleMedicoDTO.correo());
         medico.setFoto(detalleMedicoDTO.urlFoto());
-//        horarioBuscado.get().setHoraInicio(detalleMedicoDTO.horaInicioJornada());
-//        horarioBuscado.get().setHoraFin(detalleMedicoDTO.horaFinJornada());
+        horarioBuscado.get().setHoraInicio(detalleMedicoDTO.horaInicio());
+        horarioBuscado.get().setHoraFin(detalleMedicoDTO.horaFin());
 
         Medico medicoEditado = medicoRepo.save(medico);
         horarioRepo.save(horarioBuscado.get());
@@ -132,13 +157,15 @@ public class AdministradorServicioImpl implements AdministradorServicio {
                 obtenido.getEspecialidad(),
                 obtenido.getTelefono(),
                 obtenido.getCorreo(),
-                obtenido.getFoto()
+                obtenido.getFoto(),
+                obtenido.getHorario().getHoraInicio(),
+                obtenido.getHorario().getHoraFin()
         );
 
         return detalleMedicoDTO;
 
     }
-
+    @Transactional
     @Override
     public void eliminarMedico(int codigo) throws Exception {
 
@@ -157,6 +184,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         obtenido.setCorreo(Integer.toString(codigo) + "@inexistente.com");
         medicoRepo.save(obtenido);
         horarioRepo.deleteByMedicoId(obtenido.getCodigo());
+
 
     }
 
@@ -214,7 +242,8 @@ public class AdministradorServicioImpl implements AdministradorServicio {
                     p.getEstado(),
                     p.getMotivo(),
                     p.getFechaCreacion(),
-                    p.getCita().getPaciente().getNombre()
+                    p.getCita().getPaciente().getNombre(),
+                    p.getCita().getMedico().getNombre()
             ));
         }
 
@@ -327,6 +356,14 @@ public class AdministradorServicioImpl implements AdministradorServicio {
             return true;
         }
         return medicoRepo.existsByCedula(cedula);
+    }
+
+    public boolean estaRepetidaCedula_2(String cedula) {
+        Optional<Medico> medicoBuscado = medicoRepo.findByCedula(cedula);
+        if (!medicoBuscado.isEmpty()) {
+            return true;
+        }
+        return false;
     }
 
     public boolean estaRepetidoCorreo(String correo) {

@@ -291,11 +291,13 @@ public class PacienteServicioImpl implements PacienteServicio {
         Cita cita = citaBuscada.get();
         pqrsNuevo.setFechaCreacion(LocalDate.now());
         pqrsNuevo.setEstado(EstadoPQRS.EN_PROCESO);
+        pqrsNuevo.setMotivo(registroPQRSDTO.motivo());
         pqrsNuevo.setCita(cita);
 
         pqrsRepo.save(pqrsNuevo);
 
         mensajeNuevo.setPqrs(pqrsNuevo);
+        mensajeNuevo.setContenido(registroPQRSDTO.motivo());
         mensajeNuevo.setFecha(LocalDate.now());
         mensajeRepo.save(mensajeNuevo);
     }

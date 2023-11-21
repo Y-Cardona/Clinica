@@ -2,6 +2,7 @@ package co.edu.uniquindio.clinica.servicios.impl;
 
 import co.edu.uniquindio.clinica.modelo.enums.Ciudad;
 import co.edu.uniquindio.clinica.modelo.enums.Eps;
+import co.edu.uniquindio.clinica.modelo.enums.Especialidad;
 import co.edu.uniquindio.clinica.modelo.enums.TipoSangre;
 import co.edu.uniquindio.clinica.servicios.interfaces.ClinicaServicio;
 import jakarta.transaction.Transactional;
@@ -29,5 +30,10 @@ public class ClinicaServicioImpl implements ClinicaServicio {
     @Override
     public List<TipoSangre> listarTipoSangre() {
         return Arrays.asList(TipoSangre.values());
+    }
+
+    @Override
+    public List<Especialidad> listarEspecialidades() {
+        return Arrays.asList(Especialidad.values());
     }
 }

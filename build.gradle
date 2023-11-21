@@ -5,7 +5,7 @@ plugins {
 }
 group 'co.edu.uniquindio'
 version '1.0-SNAPSHOT'
-description 'Breve descripción del clinica'
+description 'Breve descripción del proyecto'
 configurations {
     compileOnly {
         extendsFrom annotationProcessor

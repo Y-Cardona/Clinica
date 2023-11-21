@@ -6,6 +6,7 @@ import co.edu.uniquindio.clinica.dto.admin.HistorialConsultas;
 import co.edu.uniquindio.clinica.dto.admin.ItemMedicoDTO;
 import co.edu.uniquindio.clinica.dto.admin.RespuestaDTO;
 import co.edu.uniquindio.clinica.dto.otro.DetallePQRSDTO;
+import co.edu.uniquindio.clinica.dto.otro.EstadoDTO;
 import co.edu.uniquindio.clinica.dto.otro.ItemPQRSDTO;
 import co.edu.uniquindio.clinica.dto.otro.MedicoDTO;
 import co.edu.uniquindio.clinica.dto.paciente.ItemPacienteDTO;
@@ -34,7 +35,7 @@ public interface AdministradorServicio {
 
     List<ItemCitaAdminDTO> listarCitas()throws Exception;
 
-    void cambiarEstadoPQRS(int codigoPQRS, EstadoPQRS estadoPQRS)throws Exception;
+    void cambiarEstadoPQRS(EstadoDTO estadoDTO)throws Exception;
 
     public List<HistorialConsultas> verHistorialDeConsultas();
 

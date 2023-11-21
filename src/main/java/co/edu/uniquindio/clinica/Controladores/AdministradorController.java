@@ -1,5 +1,6 @@
 package co.edu.uniquindio.clinica.Controladores;
 
+import co.edu.uniquindio.clinica.dto.otro.EstadoDTO;
 import co.edu.uniquindio.clinica.dto.otro.ItemPQRSDTO;
 import co.edu.uniquindio.clinica.dto.otro.MedicoDTO;
 import co.edu.uniquindio.clinica.dto.otro.MensajeDTO;
@@ -112,7 +113,7 @@ public class AdministradorController {
     @PutMapping("/cambiar-estado-pqrs/")
     public ResponseEntity<MensajeDTO> cambiarEstadoPQRS(@Valid @RequestBody EstadoDTO estadoPQRS){
         try {
-            administradorServicio.cambiarEstadoPQRS(estadoPQRS.codigoPQRS(), estadoPQRS.estadoPQRS());
+            administradorServicio.cambiarEstadoPQRS(estadoPQRS);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(new MensajeDTO(
                     false, "Estado Cambiado"));

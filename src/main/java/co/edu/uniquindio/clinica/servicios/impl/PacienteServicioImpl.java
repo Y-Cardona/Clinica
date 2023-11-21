@@ -1,5 +1,6 @@
 package co.edu.uniquindio.clinica.servicios.impl;
 
+import co.edu.uniquindio.clinica.dto.admin.ItemCitaAdminDTO;
 import co.edu.uniquindio.clinica.dto.admin.RespuestaDTO;
 import co.edu.uniquindio.clinica.dto.otro.DetallePQRSDTO;
 import co.edu.uniquindio.clinica.dto.otro.EmailDTO;
@@ -159,7 +160,7 @@ public class PacienteServicioImpl implements PacienteServicio {
 
             LocalTime horaInicio = medico.getHorario().getHoraInicio();
             while (horaInicio.isBefore(medico.getHorario().getHoraFin())){
-                medicosDisponiblesGetDTOS.add( new MedicosDisponiblesGetDTO(medico.getNombre(), horaInicio));
+                medicosDisponiblesGetDTOS.add( new MedicosDisponiblesGetDTO(medico.getNombre(), horaInicio, medico.getCodigo()));
                 horaInicio = horaInicio.plusMinutes(30);
             }
         }
@@ -179,24 +180,72 @@ public class PacienteServicioImpl implements PacienteServicio {
     }
 
     @Override
+    public DetallePacienteDTO obtenerPaciente(int codigo) throws Exception {
+        Optional<Paciente> buscado = pacienteRepo.findById(codigo);
+
+        if (buscado.isEmpty()) {
+            throw new Exception("El código " + codigo + " no existe");
+        }
+        if (!buscado.get().isEstado()) {
+            throw new Exception("El cóodigo " + codigo + " no existe");
+        }
+        Paciente obtenido = buscado.get();
+
+        DetallePacienteDTO detallePacienteDTO = new DetallePacienteDTO(
+                obtenido.getCedula(),
+                obtenido.getNombre(),
+                obtenido.getTelefono(),
+                obtenido.getFoto(),
+                obtenido.getCiudad(),
+                obtenido.getFechaNacimiento(),
+                obtenido.getAlergias(),
+                obtenido.getEps(),
+                obtenido.getTipoSangre(),
+                obtenido.getCorreo()
+        );
+
+        return detallePacienteDTO;
+    }
+
+    @Override
+    public List<ItemCitaAdminDTO> listarCitas(int codigo) throws Exception{
+        DetallePacienteDTO paciente = obtenerPaciente(codigo);
+        List<Cita> listaCitas = citaRepo.findCitasByPacienteId(codigo);
+        List<ItemCitaAdminDTO> respuesta = new ArrayList<>();
+        for (Cita c : listaCitas
+        ) {
+            respuesta.add(new ItemCitaAdminDTO(
+                    c.getCodigo(),
+                    c.getPaciente().getCedula(),
+                    c.getPaciente().getNombre(),
+                    c.getMedico().getNombre(),
+                    c.getMedico().getEspecialidad(),
+                    c.getEstadoCita(),
+                    c.getFechaCita()
+            ));
+        }
+        return respuesta;
+    }
+
+    @Override
     public int agendarCita(RegistroCitaDTO registroCitaDTO) throws Exception {
 
         Cita cita = new Cita();
 
         //Verifico que el paciente esté en el sistema
-        Optional<Paciente> pacienteBuscado = pacienteRepo.findByCedula(registroCitaDTO.idPaciente());
+        Optional<Paciente> pacienteBuscado = pacienteRepo.findById(registroCitaDTO.idPaciente());
         if( pacienteBuscado.isEmpty() ){
             throw new Exception("No existe un paciente con el código "+registroCitaDTO.idPaciente());
         }
 
-        Optional<Medico> medicoBuscado = medicoRepo.findByCedula(registroCitaDTO.idMedico());
+        Optional<Medico> medicoBuscado = medicoRepo.findById(registroCitaDTO.idMedico());
         if( medicoBuscado.isEmpty() ){
             throw new Exception("No existe un medico con el código "+registroCitaDTO.idMedico());
         }
 
         //Debo validar que el paciente no tenga mas de 3 citas activas
 
-        List<Cita> citasPorPaciente= citaRepo.findCitasByPacienteId(registroCitaDTO.idPaciente());
+        List<Cita> citasPorPaciente= citaRepo.findCitasByPacienteId(pacienteBuscado.get().getCodigo());
 
         if(citasPorPaciente.size()==3){
             throw new Excepciones("No es posible agendar más citas, puesto que ya tiene 3 citas activas");
@@ -224,13 +273,14 @@ public class PacienteServicioImpl implements PacienteServicio {
 
         Optional<Cita> citaBuscada = citaRepo.findById(registroPQRSDTO.codigoCita());
         if(!pqrsRepo.findByCodigoCita(registroPQRSDTO.codigoCita(), citaBuscada.get().getPaciente().getCedula()).isEmpty()){
-            throw new Excepciones("Usted ya tiene asignado un PQRS a la cita actual");
+            throw new Exception("Usted ya tiene asignado un PQRS a la cita actual");
         }
         if (!citaBuscada.get().getEstadoCita().equals(EstadoCita.FINALIZADA)){
-            throw new Excepciones("Su cita debe estar finalizada para poder crear un PQRS");
+            throw new Exception("Su cita debe estar finalizada para poder crear un PQRS");
         }
+
         if( citaBuscada.isEmpty() ){
-            throw new Excepciones("No existe una cita con el código ");
+            throw new Exception("No existe una cita con el código ");
         }
 
         List<Pqrs> pqrsPacienteList= pqrsRepo.findByCodigoPaciente(citaBuscada.get().getPaciente().getCodigo());
@@ -241,16 +291,13 @@ public class PacienteServicioImpl implements PacienteServicio {
         Cita cita = citaBuscada.get();
         pqrsNuevo.setFechaCreacion(LocalDate.now());
         pqrsNuevo.setEstado(EstadoPQRS.EN_PROCESO);
-        pqrsNuevo.setMotivo(registroPQRSDTO.movito());
         pqrsNuevo.setCita(cita);
 
         pqrsRepo.save(pqrsNuevo);
 
         mensajeNuevo.setPqrs(pqrsNuevo);
-        mensajeNuevo.setContenido(registroPQRSDTO.detalle());
         mensajeNuevo.setFecha(LocalDate.now());
         mensajeRepo.save(mensajeNuevo);
-
     }
 
     @Override
@@ -363,7 +410,7 @@ public class PacienteServicioImpl implements PacienteServicio {
     }
 
     @Override
-    public List<DetalleCita> verHistorialMedico(String codigoPaciente) {
+    public List<DetalleCita> verHistorialMedico(int codigoPaciente) {
 
         List<Cita> citas = citaRepo.findCitasByPacienteId(codigoPaciente);
         List<DetalleCita> detalleCitas = new ArrayList<>();
@@ -371,19 +418,7 @@ public class PacienteServicioImpl implements PacienteServicio {
         for (Cita cita:
                 citas) {
             Optional<Atencion> atencion = atencionRepo.buscarAtencionPorCodigoCita(cita.getCodigo());
-            if(atencion.isEmpty()){
-                detalleCitas.add(new DetalleCita(
-                        cita.getCodigo(),
-                        cita.getEstadoCita(),
-                        cita.getFechaCita(),
-                        cita.getMotivo(),
-                        cita.getMedico().getNombre(),
-                        cita.getMedico().getEspecialidad(),
-                        "",
-                        "",
-                        ""
-                ));
-            }else {
+            if(!atencion.isEmpty()){
                 detalleCitas.add(new DetalleCita(
                         cita.getCodigo(),
                         cita.getEstadoCita(),
@@ -395,7 +430,6 @@ public class PacienteServicioImpl implements PacienteServicio {
                         atencion.get().getDiagnostico(),
                         atencion.get().getTratamiento()));
             }
-
         }
 
         return detalleCitas;
@@ -418,12 +452,15 @@ public class PacienteServicioImpl implements PacienteServicio {
         List<ItemPQRSDTO> itemPQRSDTOS = new ArrayList<>();
         for (Pqrs pqrs:
                 pqrsList) {
-            itemPQRSDTOS.add(new ItemPQRSDTO(pqrs.getCodigo(),
+            itemPQRSDTOS.add(new ItemPQRSDTO(
+                    pqrs.getCodigo(),
                     pqrs.getEstado(),
                     pqrs.getMotivo(),
                     pqrs.getFechaCreacion(),
-                    pqrs.getCita().getPaciente().getNombre()));
+                    pqrs.getCita().getPaciente().getNombre(),
+                    pqrs.getCita().getMedico().getNombre()));
         }
+        System.out.println(itemPQRSDTOS);
         return itemPQRSDTOS;
     }
 

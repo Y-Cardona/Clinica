@@ -6,6 +6,7 @@ import co.edu.uniquindio.clinica.dto.admin.HistorialConsultas;
 import co.edu.uniquindio.clinica.dto.admin.ItemMedicoDTO;
 import co.edu.uniquindio.clinica.dto.admin.RespuestaDTO;
 import co.edu.uniquindio.clinica.dto.otro.DetallePQRSDTO;
+import co.edu.uniquindio.clinica.dto.otro.EstadoDTO;
 import co.edu.uniquindio.clinica.dto.otro.ItemPQRSDTO;
 import co.edu.uniquindio.clinica.dto.otro.MedicoDTO;
 import co.edu.uniquindio.clinica.dto.paciente.ItemPacienteDTO;
@@ -264,15 +265,15 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     }
 
     @Override
-    public void cambiarEstadoPQRS(int codigoPQRS, EstadoPQRS estadoPQRS) throws Exception {
+    public void cambiarEstadoPQRS( EstadoDTO estadoDTO) throws Exception {
 
-        Optional<Pqrs> opcional = pqrsRepo.findById(codigoPQRS);
+        Optional<Pqrs> opcional = pqrsRepo.findById(estadoDTO.codigoPQRS());
 
         if (opcional.isEmpty()) {
-            throw new Exception("El código" + codigoPQRS + " no está asociado a ningún PQRS");
+            throw new Exception("El código" + estadoDTO.codigoPQRS() + " no está asociado a ningún PQRS");
         }
         Pqrs pqrs = opcional.get();
-        pqrs.setEstado(estadoPQRS);
+        pqrs.setEstado(estadoDTO.estadoPQRS());
         pqrsRepo.save(pqrs);
 
     }

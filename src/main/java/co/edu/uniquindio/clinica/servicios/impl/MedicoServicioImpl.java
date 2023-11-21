@@ -1,6 +1,6 @@
 package co.edu.uniquindio.clinica.servicios.impl;
 
-import co.edu.uniquindio.clinica.dto.ItemCitaDTO;
+import co.edu.uniquindio.clinica.dto.otro.ItemCitaDTO;
 import co.edu.uniquindio.clinica.dto.medico.*;
 import co.edu.uniquindio.clinica.dto.paciente.DetalleCita;
 import co.edu.uniquindio.clinica.excepciones.Excepciones;
@@ -120,7 +120,7 @@ public class MedicoServicioImpl implements MedicoServicio {
             throw new Excepciones("Error, El código de cita "+finalizarCitaDTO.codigoCita()+ " No existe");
         }
 
-        if(citaBuscada.get().getEstadoCita()== EstadoCita.ASIGNADA){
+        if(citaBuscada.get().getEstadoCita()==EstadoCita.ASIGNADA){
             Cita cita = citaBuscada.get();
 
             Atencion atencion = new Atencion();
@@ -139,7 +139,7 @@ public class MedicoServicioImpl implements MedicoServicio {
     }
 
     @Override
-    public List<DetalleCita> listarHistorialMedico(String cedulaPaciente) {
+    public List<DetalleCita> listarHistorialMedico(int cedulaPaciente) {
 
         List<DetalleCita> detalleCitas = pacienteServicio.verHistorialMedico(cedulaPaciente);
 

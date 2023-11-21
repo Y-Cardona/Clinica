@@ -1,5 +1,6 @@
 package co.edu.uniquindio.clinica.servicios.interfaces;
 
+import co.edu.uniquindio.clinica.dto.admin.ItemCitaAdminDTO;
 import co.edu.uniquindio.clinica.dto.otro.DetallePQRSDTO;
 import co.edu.uniquindio.clinica.dto.otro.ItemPQRSDTO;
 import co.edu.uniquindio.clinica.dto.otro.NuevaPasswordDTO;
@@ -35,7 +36,11 @@ public interface PacienteServicio {
 
     List<DetalleCita> filtrarCitasPorMedico(int codigoPaciente, int codigoMedico); // Método para filtrar las citas médicas por médico.
 
-    List<DetalleCita> verHistorialMedico(String codigoPaciente); // Método para ver el detalle de una cita médica.
+    List<DetalleCita> verHistorialMedico(int codigoPaciente); // Método para ver el detalle de una cita médica.
 
     List<MedicosDisponiblesGetDTO> mostrarMedicosDisponibles(MedicosDisponiblesDTO medicosDisponiblesDTO)throws Excepciones;
+
+    DetallePacienteDTO obtenerPaciente (int codigo) throws Exception;
+
+    List<ItemCitaAdminDTO> listarCitas(int codigo)throws Exception;
 }

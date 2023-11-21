@@ -3,6 +3,7 @@ package co.edu.uniquindio.clinica.Controladores;
 import co.edu.uniquindio.clinica.dto.otro.MensajeDTO;
 import co.edu.uniquindio.clinica.modelo.enums.Ciudad;
 import co.edu.uniquindio.clinica.modelo.enums.Eps;
+import co.edu.uniquindio.clinica.modelo.enums.Especialidad;
 import co.edu.uniquindio.clinica.modelo.enums.TipoSangre;
 import co.edu.uniquindio.clinica.servicios.interfaces.ClinicaServicio;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,14 @@ public class ClinicaController {
         List<TipoSangre> tipoSangre = clinicaServicio.listarTipoSangre();
 
         return ResponseEntity.ok().body(new MensajeDTO<>(false, tipoSangre));
+    }
+
+    @GetMapping ("/lista-especialidades")
+    public ResponseEntity<MensajeDTO<List<Especialidad>>> listarEspecialidades(){
+
+        List<Especialidad> especialidades = clinicaServicio.listarEspecialidades();
+
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, especialidades));
     }
 
 }

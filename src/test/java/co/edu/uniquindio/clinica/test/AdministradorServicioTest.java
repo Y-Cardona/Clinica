@@ -1,6 +1,7 @@
 package co.edu.uniquindio.clinica.test;
 
 import co.edu.uniquindio.clinica.dto.otro.DetallePQRSDTO;
+import co.edu.uniquindio.clinica.dto.otro.EstadoDTO;
 import co.edu.uniquindio.clinica.dto.otro.ItemPQRSDTO;
 import co.edu.uniquindio.clinica.dto.otro.MedicoDTO;
 import co.edu.uniquindio.clinica.dto.admin.DetalleMedicoDTO;
@@ -125,7 +126,8 @@ public class AdministradorServicioTest {
     @Test
     @Sql("classpath:dataset.sql")
     public void finalizarPqrs() throws Exception {
-        administradorServicio.cambiarEstadoPQRS(2, EstadoPQRS.CERRADA);
+        EstadoDTO estadoDTO =new EstadoDTO(2, EstadoPQRS.CERRADA);
+        administradorServicio.cambiarEstadoPQRS(estadoDTO);
     }
 
     @Test

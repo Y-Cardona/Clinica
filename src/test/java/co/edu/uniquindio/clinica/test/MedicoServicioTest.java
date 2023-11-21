@@ -78,7 +78,7 @@ public class MedicoServicioTest {
     @Test
     @Sql("classpath:dataset.sql" )
     public void verHistorialMedicoTest(){
-        List<DetalleCita> detalleCitas = medicoServicio.listarHistorialMedico("8");
+        List<DetalleCita> detalleCitas = medicoServicio.listarHistorialMedico(8);
         detalleCitas.forEach(System.out::println);
     }
 }

@@ -36,7 +36,7 @@ public class ImagenServicioImpl implements ImagenServicio {
         return cloudinary.uploader().destroy(idImagen, ObjectUtils.emptyMap());
     }
 
-    private File convertir(MultipartFile imagen) throws IOException {
+    public File convertir(MultipartFile imagen) throws IOException {
         File file = File.createTempFile(imagen.getOriginalFilename(), null);
         FileOutputStream fos = new FileOutputStream(file);
         fos.write(imagen.getBytes());

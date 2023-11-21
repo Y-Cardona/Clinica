@@ -1,8 +1,8 @@
 package co.edu.uniquindio.clinica.Controladores;
-import co.edu.uniquindio.clinica.dto.otro.ImagenDTO;
+
 import co.edu.uniquindio.clinica.dto.otro.MensajeDTO;
 import co.edu.uniquindio.clinica.servicios.interfaces.CloudinaryServicio;
-import co.edu.uniquindio.clinica.servicios.interfaces.ImagenServicio;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +15,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/imagenes")
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class ImagenesController {
     public List<String> url;
     private CloudinaryServicio cloudinaryServicio;

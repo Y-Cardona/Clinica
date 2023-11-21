@@ -43,4 +43,5 @@ public interface PacienteServicio {
     DetallePacienteDTO obtenerPaciente (int codigo) throws Exception;
 
     List<ItemCitaAdminDTO> listarCitas(int codigo)throws Exception;
+    DetalleCita detalleHistorialMedico(int codigo)throws Exception;
 }

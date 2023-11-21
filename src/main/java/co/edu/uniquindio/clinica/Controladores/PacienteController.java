@@ -21,29 +21,18 @@ import java.util.List;
 @RequestMapping("api/pacientes")
 @RequiredArgsConstructor
 public class PacienteController {
-
     private final PacienteServicio pacienteServicio;
-
     @PutMapping("/editar-perfil")
     public ResponseEntity<MensajeDTO<String>> editarPerfil(@Valid @RequestBody DetallePacienteDTO detallePacienteDTO) throws Exception {
         pacienteServicio.editarPerfil(detallePacienteDTO);
         return ResponseEntity.ok().body( new MensajeDTO<>(false, "Paciente editado correctamente") );
-
     }
-
     @DeleteMapping("/eliminar/{codigo}")
     public ResponseEntity<MensajeDTO<String>> eliminarCuenta(@PathVariable int codigo) throws
             Exception{
         pacienteServicio.eliminarCuenta(codigo);
         return ResponseEntity.ok().body( new MensajeDTO<>(false, "Su cuenta se ha eliminado correctamente, por lo tanto su sesión ya no está activa")
         );
-    }
-
-    @GetMapping
-    public ResponseEntity<MensajeDTO<String>> enviarLinkRecuperacion(@RequestParam String correo) throws Exception{
-        pacienteServicio.enviarLinkRecuperacion(correo);
-        return ResponseEntity.ok().body( new MensajeDTO<>(false, "Se ha enviado un link a su correo electrónico para recuperar su contraseña") );
-
     }
 
     @PostMapping("/listar-medicos")
@@ -57,10 +46,8 @@ public class PacienteController {
                     true, e.getMessage()));
         }
     }
-
     @PostMapping("/cita")
     public ResponseEntity<MensajeDTO> agendarCita(@Valid @RequestBody RegistroCitaDTO registroCitaDTO) throws Exception{
-
         try {
             int paciente = pacienteServicio.agendarCita(registroCitaDTO);
             return ResponseEntity.status(HttpStatus.OK).body(new MensajeDTO(
@@ -70,7 +57,6 @@ public class PacienteController {
                     true, e.getMessage()));
         }
     }
-
     @PostMapping("/crear-pqrs/")
     public ResponseEntity<MensajeDTO>  crearPQRS(@Valid @RequestBody RegistroPQRSDTO registroPQRSDTO) throws Exception{
         pacienteServicio.crearPQRS(registroPQRSDTO);
@@ -78,20 +64,17 @@ public class PacienteController {
         return ResponseEntity.status(HttpStatus.OK).body(new MensajeDTO(
                 false, "Su cita se ha agendado exitosamente"));
     }
-
     @Operation(summary = "Detalle paciente", description = "Permite acceder a todos los atributos del paciente dado su código")
     @GetMapping("/detalle/{codigo}")
     public DetallePacienteDTO verDetallePaciente(@PathVariable int codigo) throws Exception{
         return pacienteServicio.verDetallePaciente(codigo);
     }
-
     @GetMapping("/listar-pqrs/{codigo}")
     public ResponseEntity<MensajeDTO> listarPQRSPaciente(@PathVariable int codigo) throws Exception{
         List<ItemPQRSDTO> itemPQRSDTOList = pacienteServicio.listarPQRSPaciente(codigo);
         return ResponseEntity.status(HttpStatus.OK).body(new MensajeDTO(
                 false, itemPQRSDTOList));
     }
-
     @GetMapping("/obtener/{codigo}")
     public ResponseEntity<MensajeDTO> obtenerPaciente(@PathVariable int codigo) {
         try {
@@ -103,7 +86,6 @@ public class PacienteController {
                     true, e.getMessage()));
         }
     }
-
     @GetMapping("/listar-citas/{codigo}")
     public ResponseEntity<MensajeDTO> listarCitas(@PathVariable int codigo){
         try {
@@ -115,13 +97,23 @@ public class PacienteController {
                     true, e.getMessage()));
         }
     }
-
     @GetMapping("/historial/{codigo}")
-    public ResponseEntity<MensajeDTO> historialMedico(@PathVariable int codigo){
+    public ResponseEntity<MensajeDTO> historialMedico(@PathVariable int codigo) {
         try {
             List<DetalleCita> lista = pacienteServicio.verHistorialMedico(codigo);
             return ResponseEntity.status(HttpStatus.OK).body(new MensajeDTO(
                     false, lista));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MensajeDTO(
+                    true, e.getMessage()));
+        }
+    }
+    @GetMapping("/historial/detalle/{codigo}")
+    public ResponseEntity<MensajeDTO> detalleHistorialMedico(@PathVariable int codigo){
+        try {
+            DetalleCita detalleCita = pacienteServicio.detalleHistorialMedico(codigo);
+            return ResponseEntity.status(HttpStatus.OK).body(new MensajeDTO(
+                    false, detalleCita));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MensajeDTO(
                     true, e.getMessage()));

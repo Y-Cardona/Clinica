@@ -266,6 +266,27 @@ public class PacienteServicioImpl implements PacienteServicio {
     }
 
     @Override
+    public DetalleCita detalleHistorialMedico(int codigo){
+        Optional<Cita> cita = citaRepo.findById(codigo);
+
+        Optional<Atencion> atencion = atencionRepo.buscarAtencionPorCodigoCita(cita.get().getCodigo());
+        if(!atencion.isEmpty()){
+            DetalleCita detalleCitas = new  DetalleCita(
+                    cita.get().getCodigo(),
+                    cita.get().getEstadoCita(),
+                    cita.get().getFechaCita(),
+                    cita.get().getMotivo(),
+                    cita.get().getMedico().getNombre(),
+                    cita.get().getMedico().getEspecialidad(),
+                    atencion.get().getNotasMedicas(),
+                    atencion.get().getDiagnostico(),
+                    atencion.get().getTratamiento());
+            return detalleCitas;
+        }
+        return null;
+    }
+
+    @Override
     public void crearPQRS(RegistroPQRSDTO registroPQRSDTO) throws Exception{
 
         Pqrs pqrsNuevo = new Pqrs();

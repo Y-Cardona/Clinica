@@ -12,7 +12,6 @@ import co.edu.uniquindio.clinica.dto.otro.MedicoDTO;
 import co.edu.uniquindio.clinica.dto.paciente.ItemPacienteDTO;
 import co.edu.uniquindio.clinica.excepciones.Excepciones;
 import co.edu.uniquindio.clinica.modelo.entidades.*;
-import co.edu.uniquindio.clinica.modelo.enums.EstadoPQRS;
 import co.edu.uniquindio.clinica.repositorios.*;
 import co.edu.uniquindio.clinica.servicios.interfaces.AdministradorServicio;
 import jakarta.transaction.Transactional;
@@ -183,7 +182,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         obtenido.setEstado(false);
         obtenido.setCorreo(Integer.toString(codigo) + "@inexistente.com");
         medicoRepo.save(obtenido);
-        horarioRepo.deleteByMedicoId(obtenido.getCodigo());
+        horarioRepo.deleteHorarioByMedico_Codigo(obtenido.getCodigo());
 
 
     }
